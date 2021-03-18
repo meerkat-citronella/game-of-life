@@ -13,11 +13,12 @@ const PageContainer = styled.div`
 
 const GameContainer = styled.div`
   height: 700px;
-  width: 700px;
+  width: 1000px;
   background-color: rgb(20, 28, 58);
   border: 1px solid rgb(45, 93, 204);
   border-radius: 5px;
   color: white;
+  padding: 20px;
 `;
 
 function App() {
