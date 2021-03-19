@@ -1,9 +1,8 @@
 import React from "react";
 import { Stage, Layer, Line } from "react-konva";
 
-const GRID_HEIGHT = 700;
-const GRID_WIDTH = 1000;
-const CELL_SIZE = 20;
+import { Cells } from "../cells/index";
+import { GRID_HEIGHT, GRID_WIDTH, CELL_SIZE } from "../../constants/constants";
 
 /**
  * gets a mapping of lines, either vertical or horizontal
@@ -28,7 +27,7 @@ const horizontalPoints = [0, 0, GRID_WIDTH, 0];
 
 export const Grid = () => {
   return (
-    <Stage width={1000} height={700}>
+    <Stage width={GRID_WIDTH} height={GRID_HEIGHT}>
       <Layer>
         {getLines("vertical").map((line) => (
           <Line
@@ -50,6 +49,7 @@ export const Grid = () => {
             points={horizontalPoints}
           />
         ))}
+        <Cells />
       </Layer>
     </Stage>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import styled from "styled-components";
-import { Grid } from "./Grid";
+import { Grid } from "./components/grid";
 
 const PageContainer = styled.div`
   display: flex;
