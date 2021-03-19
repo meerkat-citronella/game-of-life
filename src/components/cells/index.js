@@ -1,57 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Rect } from "react-konva";
 
-import { getCellNeighborCoordinates, getLiveNeighbors } from "./functions";
-import { GRID_HEIGHT, GRID_WIDTH, CELL_SIZE } from "../../constants/constants";
+import { incrementCells, setInitialCondition } from "./functions";
+import { CELL_SIZE } from "../../constants/constants";
+import { BLANK_GRID } from "./constants";
 
-const INITIAL_CONDITION = [
-  ...Array(Math.floor(GRID_HEIGHT / CELL_SIZE)),
-].map(() => [...Array(Math.floor(GRID_WIDTH / CELL_SIZE))].map(() => false));
+const tenCellInfiniteGrowthBlueprint = {
+  5: [2, 8],
+  6: [6, 8, 9],
+  7: [6, 8],
+  8: [6],
+  9: [4],
+  10: [2, 4],
+};
 
-INITIAL_CONDITION[5][5] = true;
-INITIAL_CONDITION[5][6] = true;
-INITIAL_CONDITION[5][7] = true;
-
-INITIAL_CONDITION[10][10] = true;
-INITIAL_CONDITION[10][11] = true;
-INITIAL_CONDITION[10][12] = true;
+const TenCellInfiniteGrowth = setInitialCondition(
+  tenCellInfiniteGrowthBlueprint,
+  BLANK_GRID
+);
 
 export const Cells = () => {
-  const [cellValues, setCellValues] = useState(INITIAL_CONDITION);
+  const [cellValues, setCellValues] = useState(TenCellInfiniteGrowth);
 
-  // check cells on timer
+  // increment cells on interval
   useEffect(() => {
     const intervalID = setInterval(() => {
-      const newCellValues = cellValues.map((row, m) =>
-        row.map((cell, n) => {
-          const cellNeighborCoordinates = getCellNeighborCoordinates(m, n);
-          const liveNeighbors = getLiveNeighbors(
-            cellNeighborCoordinates,
-            cellValues
-          );
-
-          if (cell === true) {
-            if (liveNeighbors === 2 || liveNeighbors.length === 3) return true;
-            else return false;
-          } else {
-            if (liveNeighbors === 3) return true;
-            else return false;
-          }
-
-          //   console.log(
-          //     "cell:",
-          //     m,
-          //     n,
-          //     "\ncell value:",
-          //     cell,
-          //     "\nlive neighbors:",
-          //     liveNeighbors
-          //   );
-        })
-      );
-
+      const newCellValues = incrementCells(cellValues);
       setCellValues(newCellValues);
-    }, 1000);
+    }, 200);
     return () => clearInterval(intervalID);
   }, [cellValues, setCellValues]);
 
