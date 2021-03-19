@@ -33,7 +33,7 @@ export const Cells = () => {
           if (cell === true) {
             if (liveNeighbors === 2 || liveNeighbors.length === 3) return true;
             else return false;
-          } else if (cell === false) {
+          } else {
             if (liveNeighbors === 3) return true;
             else return false;
           }
