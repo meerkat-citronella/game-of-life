@@ -1,7 +1,12 @@
 import React from "react";
 import "./App.css";
 import styled from "styled-components";
-import { Grid } from "./components/grid";
+import { Grid } from "./components/grid/index";
+import { Cells } from "./components/cells/index";
+import {
+  GAME_CONTAINER_HEIGHT,
+  GAME_CONTAINER_WIDTH,
+} from "./constants/constants";
 
 const PageContainer = styled.div`
   display: flex;
@@ -12,8 +17,12 @@ const PageContainer = styled.div`
 `;
 
 const GameContainer = styled.div`
-  height: 700px;
-  width: 1000px;
+  max-height: ${GAME_CONTAINER_HEIGHT}px;
+  max-width: ${GAME_CONTAINER_WIDTH}px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   background-color: rgb(20, 28, 58);
   border: 1px solid rgb(45, 93, 204);
   border-radius: 5px;
@@ -25,7 +34,9 @@ function App() {
   return (
     <PageContainer>
       <GameContainer>
-        <Grid />
+        <Grid>
+          <Cells />
+        </Grid>
       </GameContainer>
     </PageContainer>
   );

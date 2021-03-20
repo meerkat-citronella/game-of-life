@@ -2,13 +2,12 @@ import React from "react";
 import { Stage, Layer, Line } from "react-konva";
 
 import { getLines } from "./functions";
-import { Cells } from "../cells/index";
 import { GRID_HEIGHT, GRID_WIDTH } from "../../constants/constants";
 
 const pointsToDrawVerticalLines = [0, 0, 0, GRID_HEIGHT];
 const pointsToDrawHorizontalLines = [0, 0, GRID_WIDTH, 0];
 
-export const Grid = () => {
+export const Grid = ({ children }) => {
   return (
     <Stage width={GRID_WIDTH} height={GRID_HEIGHT}>
       <Layer>
@@ -32,7 +31,7 @@ export const Grid = () => {
             points={pointsToDrawHorizontalLines}
           />
         ))}
-        <Cells />
+        {children}
       </Layer>
     </Stage>
   );

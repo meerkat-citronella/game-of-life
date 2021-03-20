@@ -1,3 +1,8 @@
-export const GRID_HEIGHT = 700;
-export const GRID_WIDTH = 1000;
-export const CELL_SIZE = 25;
+export const GAME_CONTAINER_HEIGHT = 700;
+export const GAME_CONTAINER_WIDTH = 1000;
+
+// export const GRID_HEIGHT = GAME_CONTAINER_HEIGHT * 1.2;
+// export const GRID_WIDTH = GAME_CONTAINER_WIDTH * 1.2;
+export const GRID_HEIGHT = GAME_CONTAINER_HEIGHT;
+export const GRID_WIDTH = GAME_CONTAINER_WIDTH;
+export const CELL_SIZE = 17;

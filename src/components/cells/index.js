@@ -1,33 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Rect } from "react-konva";
 
-import { incrementCells, setInitialCondition } from "./functions";
+import {
+  incrementCells,
+  setInitialCondition,
+  transformBlueprint,
+} from "./functions";
 import { CELL_SIZE } from "../../constants/constants";
-import { BLANK_GRID } from "./constants";
-
-const tenCellInfiniteGrowthBlueprint = {
-  5: [2, 8],
-  6: [6, 8, 9],
-  7: [6, 8],
-  8: [6],
-  9: [4],
-  10: [2, 4],
-};
-
-const TenCellInfiniteGrowth = setInitialCondition(
+import {
+  BLANK_GRID,
   tenCellInfiniteGrowthBlueprint,
+  gosperGliderGunBlueprint,
+} from "./constants";
+
+const tenCellInfiniteGrowth = setInitialCondition(
+  transformBlueprint(30, 30, tenCellInfiniteGrowthBlueprint),
+  BLANK_GRID
+);
+
+const gosperGliderGun = setInitialCondition(
+  gosperGliderGunBlueprint,
   BLANK_GRID
 );
 
 export const Cells = () => {
-  const [cellValues, setCellValues] = useState(TenCellInfiniteGrowth);
+  const [cellValues, setCellValues] = useState(gosperGliderGun);
 
   // increment cells on interval
   useEffect(() => {
     const intervalID = setInterval(() => {
       const newCellValues = incrementCells(cellValues);
       setCellValues(newCellValues);
-    }, 200);
+    }, 100);
     return () => clearInterval(intervalID);
   }, [cellValues, setCellValues]);
 

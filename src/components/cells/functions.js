@@ -1,8 +1,8 @@
 /**
  * get the m x n coordinates of the 8 surrounding cells for a given cell
- * @param {integer} m - cell row
- * @param {integer} n - cell column
- * @returns {integer[][]} the surrounding 8 cells for the given coordinates
+ * @param {number} m - cell row
+ * @param {number} n - cell column
+ * @returns {number[8][]} the surrounding 8 cells for the given coordinates
  */
 export const getCellNeighborCoordinates = (m, n) => [
   // clockwise from top left
@@ -18,7 +18,7 @@ export const getCellNeighborCoordinates = (m, n) => [
 
 /**
  * find the number of 'live' neighbors given the neighbor coords and a matrix of cells
- * @param {integer[][]} cellNeighborCoordinates - output of getCellNeighborCoordinates(). in the form [row, colum]
+ * @param {number[][]} cellNeighborCoordinates - output of getCellNeighborCoordinates(). in the form [row, colum]
  * @param {boolean[][]} cellValues - m x n matrix of cells
  * @returns {number} number of 'live' neighbors
  */
@@ -57,6 +57,7 @@ export const incrementCells = (cellValues) =>
  * @returns
  */
 export const setInitialCondition = (blueprint, grid) => {
+  console.log("blueprint:", blueprint);
   const blueprintMapping = Object.entries(blueprint)
     .map((entry) => {
       const row = Number.parseInt(entry[0]);
@@ -64,7 +65,28 @@ export const setInitialCondition = (blueprint, grid) => {
       return [...cols.map((col) => [row, col])];
     })
     .flat();
-  const gridCopy = grid.slice();
-  blueprintMapping.forEach((coord) => (gridCopy[coord[0]][coord[1]] = true));
+  const gridCopy = grid.map((row) => row.slice()).slice();
+  console.log("gridCopy:", gridCopy);
+  blueprintMapping.forEach((coord) => {
+    console.log("coordinate:", coord);
+    gridCopy[coord[0]][coord[1]] = true;
+  });
   return gridCopy;
+};
+
+/**
+ * transforms a blueprint by a specified number of rows and columns
+ * @param {number} rowOffset - number of rows to shift down by
+ * @param {number} columnOffset - number of columns to shift to the right by
+ * @param {{number: number[]}} blueprint - the blueprint to be transformed
+ * @returns {{number: number[]}} transformed blueprint
+ */
+export const transformBlueprint = (rowOffset, columnOffset, blueprint) => {
+  const newBlueprint = {};
+  Object.entries(blueprint).forEach((entry) => {
+    newBlueprint[Number.parseInt(entry[0]) + rowOffset] = entry[1].map(
+      (col) => col + columnOffset
+    );
+  });
+  return newBlueprint;
 };
