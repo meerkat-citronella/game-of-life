@@ -5,10 +5,7 @@ import {
   incrementCells,
   setInitialCondition,
   transformBlueprint,
-  checkTopRow,
-  checkLeftColumn,
-  checkRightColumn,
-  checkBottomRow,
+  checkEdgesAndAddExtraRowsOrColumns,
 } from "./functions";
 import { CELL_SIZE } from "../../constants/constants";
 import {
@@ -41,52 +38,25 @@ const bottomBlock = setInitialCondition(
   BLANK_GRID
 );
 
-/**
- * checks the borders of the passed m x n matrix, if there are live cells on any of the edges, it adds a row or column to that edge.
- * @param {boolean[][]} cellValues - an m x n matrix of cells
- * @returns {boolean[][]} the modified m x n matrix
- */
-const checkEdgesAndAddExtraRowsOrColumns = (cellValues, displayOffsets) => {
-  // check edges, add if necessary
-  const newTop = checkTopRow(cellValues);
-  const newLeft = checkLeftColumn(cellValues);
-  const newRight = checkRightColumn(cellValues);
-  const newBottom = checkBottomRow(cellValues);
-
-  const blankRow = Array(cellValues[0].length).fill(false);
-  if (newTop) cellValues.unshift(blankRow);
-  if (newLeft) {
-    cellValues.forEach((row) => row.unshift(false));
-  }
-  if (newRight) {
-    cellValues.forEach((row) => row.push(false));
-  }
-  if (newBottom) cellValues.push(blankRow);
-
-  // adjust offset
-  if (newTop) displayOffsets.m = displayOffsets.m + 1;
-  if (newLeft) displayOffsets.n = displayOffsets.n + 1;
-
-  return { cellValues, displayOffsets };
-};
-
 export const Cells = ({ displayOffset, setDisplayOffset }) => {
   const [cellValues, setCellValues] = useState(gosperGliderGun);
 
-  // increment cells on interval
+  console.log("displayOffset:", displayOffset);
+
+  // move pattern forward
   useEffect(() => {
     const intervalID = setInterval(() => {
       // check edges, add if necessary
       const {
         cellValues: newCellValues,
-        displayOffsets: newDisplayOffsets, // get new offsets
+        displayOffset: newDisplayOffset, // get new offsets
       } = checkEdgesAndAddExtraRowsOrColumns(
         // increment pattern
         incrementCells(cellValues),
         displayOffset
       );
 
-      setDisplayOffset(newDisplayOffsets);
+      setDisplayOffset(newDisplayOffset);
       setCellValues(newCellValues);
     }, 100);
     return () => clearInterval(intervalID);
@@ -107,7 +77,7 @@ export const Cells = ({ displayOffset, setDisplayOffset }) => {
             fill="goldenrod"
           />
         );
-      }
+      } else return null;
     })
   );
 };

@@ -124,3 +124,36 @@ export const checkBottomRow = (cellValues) => {
   }
   return false;
 };
+
+/**
+ * checks the borders of the passed m x n matrix, if there are live cells on any of the edges, it adds a row or column to that edge.
+ * @param {boolean[][]} cellValues - an m x n matrix of cells
+ * @param {{m: nunber, n: number}} - the m (rows), n (cols) display offset
+ * @returns {displayOffsets: boolean[][]} the modified m x n matrix
+ */
+export const checkEdgesAndAddExtraRowsOrColumns = (
+  cellValues,
+  displayOffset
+) => {
+  // check edges, add if necessary
+  const newTop = checkTopRow(cellValues);
+  const newLeft = checkLeftColumn(cellValues);
+  const newRight = checkRightColumn(cellValues);
+  const newBottom = checkBottomRow(cellValues);
+
+  const blankRow = Array(cellValues[0].length).fill(false);
+  if (newTop) cellValues.unshift(blankRow);
+  if (newLeft) {
+    cellValues.forEach((row) => row.unshift(false));
+  }
+  if (newRight) {
+    cellValues.forEach((row) => row.push(false));
+  }
+  if (newBottom) cellValues.push(blankRow);
+
+  // adjust offset
+  if (newTop) displayOffset.m = displayOffset.m + 1;
+  if (newLeft) displayOffset.n = displayOffset.n + 1;
+
+  return { cellValues, displayOffset };
+};
