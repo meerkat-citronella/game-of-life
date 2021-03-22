@@ -17,7 +17,7 @@ export const getCellNeighborCoordinates = (m, n) => [
 ];
 
 /**
- * find the number of 'live' neighbors given the neighbor coords and a matrix of cells
+ * counts the number of 'live' neighbors given the neighbor coords and a matrix of cells
  * @param {number[][]} cellNeighborCoordinates - output of getCellNeighborCoordinates(). in the form [row, colum]
  * @param {boolean[][]} cellValues - m x n matrix of cells
  * @returns {number} number of 'live' neighbors
@@ -57,7 +57,6 @@ export const incrementCells = (cellValues) =>
  * @returns
  */
 export const setInitialCondition = (blueprint, grid) => {
-  console.log("blueprint:", blueprint);
   const blueprintMapping = Object.entries(blueprint)
     .map((entry) => {
       const row = Number.parseInt(entry[0]);
@@ -66,9 +65,7 @@ export const setInitialCondition = (blueprint, grid) => {
     })
     .flat();
   const gridCopy = grid.map((row) => row.slice()).slice();
-  console.log("gridCopy:", gridCopy);
   blueprintMapping.forEach((coord) => {
-    console.log("coordinate:", coord);
     gridCopy[coord[0]][coord[1]] = true;
   });
   return gridCopy;
@@ -89,4 +86,41 @@ export const transformBlueprint = (rowOffset, columnOffset, blueprint) => {
     );
   });
   return newBlueprint;
+};
+
+/**
+ * checks the top row of a matrix to see if has at least one 'live' cell
+ * @param {boolean[][]} cellValues - an m x n matrix of cells
+ * @returns {boolean} whether the top row of the matrix contains a 'live' cell
+ */
+export const checkTopRow = (cellValues) => {
+  const topRow = cellValues[0];
+  for (let cell of topRow) {
+    if (cell === true) return true;
+  }
+  return false;
+};
+
+export const checkLeftColumn = (cellValues) => {
+  for (let i = 0; i < cellValues.length; i++) {
+    if (cellValues[i][0] === true) return true;
+  }
+  return false;
+};
+
+export const checkRightColumn = (cellValues) => {
+  const numColumns = cellValues[0].length;
+  const numRows = cellValues.length;
+  for (let i = 0; i < numRows; i++) {
+    if (cellValues[i][numColumns - 1] === true) return true;
+  }
+  return false;
+};
+
+export const checkBottomRow = (cellValues) => {
+  const bottomRow = cellValues[cellValues.length - 1];
+  for (let i = 0; i < bottomRow.length; i++) {
+    if (bottomRow[i] === true) return true;
+  }
+  return false;
 };

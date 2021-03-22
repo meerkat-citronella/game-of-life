@@ -12,6 +12,14 @@ export const BLANK_GRID = [
 ].map(() => [...Array(Math.floor(GRID_WIDTH / CELL_SIZE))].map(() => false));
 
 /**
+ * @type {number[][]} a 2x2 stationary block
+ */
+export const blockBlueprint = {
+  0: [0, 1],
+  1: [0, 1],
+};
+
+/**
  * @type {{number: number[]}} blueprint for ten cell infinite growth pattern ('block-laying switch engine')
  */
 export const tenCellInfiniteGrowthBlueprint = {

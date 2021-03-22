@@ -7,7 +7,7 @@ import {
 /**
  * gets a mapping of lines start points, either vertical or horizontal
  * @param {string} horizOrVert - one of either "horizonal" or "vertical"
- * @returns {{key: string, x: number, y: number}[]} requested set of points
+ * @returns {{key: string, x: number, y: number}[]} requested set of points, where the x and y coords are the pixel offset of the point from the top left corner
  */
 export const getLines = (horizOrVert) =>
   [

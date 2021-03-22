@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import styled from "styled-components";
 import { Grid } from "./components/grid/index";
 import { Cells } from "./components/cells/index";
+import { PanDisplayButtons } from "./components/buttons";
 import {
   GAME_CONTAINER_HEIGHT,
   GAME_CONTAINER_WIDTH,
@@ -20,6 +21,7 @@ const GameContainer = styled.div`
   max-height: ${GAME_CONTAINER_HEIGHT}px;
   max-width: ${GAME_CONTAINER_WIDTH}px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -31,11 +33,20 @@ const GameContainer = styled.div`
 `;
 
 function App() {
+  const [displayOffset, setDisplayOffset] = useState({ m: 0, n: 0 });
+
   return (
     <PageContainer>
       <GameContainer>
+        <PanDisplayButtons
+          displayOffset={displayOffset}
+          setDisplayOffset={setDisplayOffset}
+        />
         <Grid>
-          <Cells />
+          <Cells
+            displayOffset={displayOffset}
+            setDisplayOffset={setDisplayOffset}
+          />
         </Grid>
       </GameContainer>
     </PageContainer>
