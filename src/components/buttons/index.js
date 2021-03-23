@@ -19,16 +19,16 @@ export const PanDisplayButtons = ({ setDisplayOffset }) => {
     <div>
       <p>
         Pan:{"  "}
-        <Button onClick={panRight}>
+        <Button onClick={panLeft}>
           <Icon icon={"arrow-left"} />
         </Button>
-        <Button onClick={panLeft}>
+        <Button onClick={panRight}>
           <Icon icon={"arrow-right"} />
         </Button>
-        <Button onClick={panUp}>
+        <Button onClick={panDown}>
           <Icon icon={"arrow-down"} />
         </Button>
-        <Button onClick={panDown}>
+        <Button onClick={panUp}>
           <Icon icon={"arrow-up"} />
         </Button>{" "}
       </p>

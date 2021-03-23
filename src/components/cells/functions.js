@@ -18,19 +18,24 @@ export const getCellNeighborCoordinates = (m, n) => [
 
 /**
  * counts the number of 'live' neighbors given the neighbor coords and a matrix of cells
- * @param {number[][]} cellNeighborCoordinates - output of getCellNeighborCoordinates(). in the form [row, colum]
+ * time: O(1)
+ * space: O(1)
+ * @param {number[8][]} cellNeighborCoordinates - output of getCellNeighborCoordinates(). in the form [row, colum]
  * @param {boolean[][]} cellValues - m x n matrix of cells
  * @returns {number} number of 'live' neighbors
  */
 export const getLiveNeighbors = (cellNeighborCoordinates, cellValues) =>
-  cellNeighborCoordinates
-    .map((coords) => cellValues[coords[0]] && cellValues[coords[0]][coords[1]])
-    .filter((cell) => cell === true).length;
+  cellNeighborCoordinates.reduce((count, coords) => {
+    if (cellValues[coords[0]] && cellValues[coords[0]][coords[1]]) count++;
+    return count;
+  }, 0);
 
 /**
  * 'age' an m x n matrix of cells by one period, according to the rules of Conway's Game of Life
- * @param {number[][]} cellValues - m x n matrix of cells
- * @returns {number[][]} the cellValues incremented according to the rules of Conway's Game of Life
+ * time: O(m * n)
+ * space: O(m * n)
+ * @param {boolean[][]} cellValues - m x n matrix of cells
+ * @returns {boolean[][]} the cellValues incremented according to the rules of Conway's Game of Life
  */
 export const incrementCells = (cellValues) =>
   cellValues.map((row, m) =>
@@ -39,7 +44,6 @@ export const incrementCells = (cellValues) =>
         getCellNeighborCoordinates(m, n),
         cellValues
       );
-
       if (cell === true) {
         if (liveNeighbors === 2 || liveNeighbors === 3) return true;
         else return false;

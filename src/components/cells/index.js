@@ -41,8 +41,6 @@ const bottomBlock = setInitialCondition(
 export const Cells = ({ displayOffset, setDisplayOffset }) => {
   const [cellValues, setCellValues] = useState(gosperGliderGun);
 
-  console.log("displayOffset:", displayOffset);
-
   // move pattern forward
   useEffect(() => {
     const intervalID = setInterval(() => {
