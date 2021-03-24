@@ -5,7 +5,7 @@ import {
   incrementCells,
   setInitialCondition,
   transformBlueprint,
-  checkEdgesAndAddExtraRowsOrColumns,
+  parseMxNKey,
 } from "./functions";
 import { CELL_SIZE } from "../../constants/constants";
 import {
@@ -13,6 +13,10 @@ import {
   tenCellInfiniteGrowthBlueprint,
   gosperGliderGunBlueprint,
   blockBlueprint,
+  gliderBlueprint,
+  backwardsGliderBlueprint,
+  toadBlueprint,
+  beaconBlueprint,
 } from "./constants";
 
 // setup
@@ -22,9 +26,17 @@ const tenCellInfiniteGrowth = setInitialCondition(
 );
 
 const gosperGliderGun = setInitialCondition(
-  gosperGliderGunBlueprint,
+  transformBlueprint(30, 30, gosperGliderGunBlueprint),
   BLANK_GRID
 );
+
+const glider = setInitialCondition(gliderBlueprint, BLANK_GRID);
+const backwardsGlider = setInitialCondition(
+  backwardsGliderBlueprint,
+  BLANK_GRID
+);
+const toad = setInitialCondition(toadBlueprint, BLANK_GRID);
+const beacon = setInitialCondition(beaconBlueprint, BLANK_GRID);
 
 const block = setInitialCondition(blockBlueprint, BLANK_GRID);
 
@@ -44,38 +56,24 @@ export const Cells = ({ displayOffset, setDisplayOffset }) => {
   // move pattern forward
   useEffect(() => {
     const intervalID = setInterval(() => {
-      // check edges, add if necessary
-      const {
-        cellValues: newCellValues,
-        displayOffset: newDisplayOffset, // get new offsets
-      } = checkEdgesAndAddExtraRowsOrColumns(
-        // increment pattern
-        incrementCells(cellValues),
-        displayOffset
-      );
-
-      setDisplayOffset(newDisplayOffset);
-      setCellValues(newCellValues);
+      setCellValues((prevCellValues) => incrementCells(prevCellValues));
     }, 100);
     return () => clearInterval(intervalID);
-  }, [cellValues, displayOffset, setCellValues, setDisplayOffset]);
+  }, [cellValues, setCellValues]);
 
-  return cellValues.map((row, m) =>
-    row.map((cell, n) => {
-      if (cell === true) {
-        const adjustedRow = m - displayOffset.m;
-        const adjustedColumn = n - displayOffset.n;
-        return (
-          <Rect
-            key={`row${adjustedRow}RECT-column${adjustedColumn}`}
-            x={adjustedColumn * CELL_SIZE}
-            y={adjustedRow * CELL_SIZE}
-            width={CELL_SIZE}
-            height={CELL_SIZE}
-            fill="goldenrod"
-          />
-        );
-      } else return null;
-    })
-  );
+  return Object.keys(cellValues).map((key) => {
+    const { m, n } = parseMxNKey(key);
+    const adjustedRow = m - displayOffset.m;
+    const adjustedColumn = n - displayOffset.n;
+    return (
+      <Rect
+        key={`row${adjustedRow}-column${adjustedColumn}`}
+        x={adjustedColumn * CELL_SIZE}
+        y={adjustedRow * CELL_SIZE}
+        width={CELL_SIZE}
+        height={CELL_SIZE}
+        fill="goldenrod"
+      />
+    );
+  });
 };
