@@ -21,36 +21,24 @@ import {
 
 // setup
 const tenCellInfiniteGrowth = setInitialCondition(
-  transformBlueprint(30, 30, tenCellInfiniteGrowthBlueprint),
-  BLANK_GRID
+  transformBlueprint(30, 30, tenCellInfiniteGrowthBlueprint)
 );
-
 const gosperGliderGun = setInitialCondition(
-  transformBlueprint(30, 30, gosperGliderGunBlueprint),
-  BLANK_GRID
+  transformBlueprint(30, 30, gosperGliderGunBlueprint)
 );
-
-const glider = setInitialCondition(gliderBlueprint, BLANK_GRID);
-const backwardsGlider = setInitialCondition(
-  backwardsGliderBlueprint,
-  BLANK_GRID
-);
-const toad = setInitialCondition(toadBlueprint, BLANK_GRID);
-const beacon = setInitialCondition(beaconBlueprint, BLANK_GRID);
-
-const block = setInitialCondition(blockBlueprint, BLANK_GRID);
-
+const glider = setInitialCondition(gliderBlueprint);
+const backwardsGlider = setInitialCondition(backwardsGliderBlueprint);
+const toad = setInitialCondition(toadBlueprint);
+const beacon = setInitialCondition(beaconBlueprint);
+const block = setInitialCondition(blockBlueprint);
 const rightBlock = setInitialCondition(
-  transformBlueprint(0, 98, blockBlueprint),
-  BLANK_GRID
+  transformBlueprint(0, 98, blockBlueprint)
 );
-
 const bottomBlock = setInitialCondition(
-  transformBlueprint(68, 0, blockBlueprint),
-  BLANK_GRID
+  transformBlueprint(68, 0, blockBlueprint)
 );
 
-export const Cells = ({ displayOffset, setDisplayOffset }) => {
+export const Cells = ({ displayOffset }) => {
   const [cellValues, setCellValues] = useState(gosperGliderGun);
 
   // move pattern forward

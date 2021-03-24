@@ -61,10 +61,9 @@ export const incrementCells = (cellValues) => {
 /**
  * takes in a semantic blueprint slug and a blank grid and returns a grid set in accordance with the blueprint
  * @param {{number: number[]}} blueprint - a blueprint slug. of the form { row: [each, column, occupied, in, row]}
- * @param {number[][]} grid - the 'live' cells of m x n grid
- * @returns
+ * @returns {{string: boolean}} hashed cellValues object, in the form { row#col: true }
  */
-export const setInitialCondition = (blueprint, grid) => {
+export const setInitialCondition = (blueprint) => {
   const hashMap = {};
   Object.entries(blueprint).forEach((entry) => {
     const row = Number.parseInt(entry[0]);

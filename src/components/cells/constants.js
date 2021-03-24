@@ -1,16 +1,3 @@
-import {
-  GRID_HEIGHT,
-  GRID_WIDTH,
-  CELL_SIZE,
-} from "./../../constants/constants";
-
-/**
- * @type {number[][]} a blank (full of falses) GRID_HEIGHT x GRID_WIDTH matrix
- */
-export const BLANK_GRID = [
-  ...Array(Math.floor(GRID_HEIGHT / CELL_SIZE)),
-].map(() => [...Array(Math.floor(GRID_WIDTH / CELL_SIZE))].map(() => false));
-
 /**
  * @type {number[][]} a 2x2 stationary block
  */
@@ -64,11 +51,17 @@ export const backwardsGliderBlueprint = {
   3: [2],
 };
 
+/**
+ * @type {{number: number[]}} blueprint for toad
+ */
 export const toadBlueprint = {
   1: [2, 3, 4],
   2: [1, 2, 3],
 };
 
+/**
+ * @type {{number: number[]}} blueprint for beacon
+ */
 export const beaconBlueprint = {
   1: [1, 2],
   2: [1, 2],
