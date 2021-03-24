@@ -45,3 +45,33 @@ export const gosperGliderGunBlueprint = {
   9: [13, 17],
   10: [14, 15],
 };
+
+/**
+ * @type {{number: number[]}} blueprint for glider
+ */
+export const gliderBlueprint = {
+  1: [2],
+  2: [3],
+  3: [1, 2, 3],
+};
+
+/**
+ * @type {{number: number[]}} blueprint for glider
+ */
+export const backwardsGliderBlueprint = {
+  1: [1, 2, 3],
+  2: [3],
+  3: [2],
+};
+
+export const toadBlueprint = {
+  1: [2, 3, 4],
+  2: [1, 2, 3],
+};
+
+export const beaconBlueprint = {
+  1: [1, 2],
+  2: [1, 2],
+  3: [3, 4],
+  4: [3, 4],
+};

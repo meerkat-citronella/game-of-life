@@ -1,78 +1,80 @@
 /**
- * get the m x n coordinates of the 8 surrounding cells for a given cell
- * @param {number} m - cell row
- * @param {number} n - cell column
- * @returns {number[8][]} the surrounding 8 cells for the given coordinates
+ * parses a key hash, using the format I am using ('m#n'), into its constiuent row, col coords.
+ * @param {string} key - hashed key, representing coords of a cell on an m x n matrix. In the form m#n (ex: 21#42, which means row 21, col 42)
+ * @returns { m: number, n: number} the m (row) and n (col) of the cell
  */
-export const getCellNeighborCoordinates = (m, n) => [
-  // clockwise from top left
-  [m - 1, n - 1],
-  [m - 1, n],
-  [m - 1, n + 1],
-  [m, n - 1],
-  [m, n + 1],
-  [m + 1, n - 1],
-  [m + 1, n],
-  [m + 1, n + 1],
-];
+export const parseMxNKey = (key) => {
+  const m = Number.parseInt(/-?\d+#/.exec(key)[0].replace("#", ""));
+  const n = Number.parseInt(/#-?\d+/.exec(key)[0].replace("#", ""));
+  return { m, n };
+};
 
 /**
- * counts the number of 'live' neighbors given the neighbor coords and a matrix of cells
- * time: O(1)
- * space: O(1)
- * @param {number[8][]} cellNeighborCoordinates - output of getCellNeighborCoordinates(). in the form [row, colum]
- * @param {boolean[][]} cellValues - m x n matrix of cells
- * @returns {number} number of 'live' neighbors
+ * get the m x n coordinates of the 8 surrounding cells for a given cell
+ * @param {string} key - cell coords, in form m#n (i.e. 21#42)
+ * @returns {string[]} the surrounding 8 cells for the given coordinates
  */
-export const getLiveNeighbors = (cellNeighborCoordinates, cellValues) =>
-  cellNeighborCoordinates.reduce((count, coords) => {
-    if (cellValues[coords[0]] && cellValues[coords[0]][coords[1]]) count++;
-    return count;
-  }, 0);
+export const getCellNeighborCoordinates = (key) => {
+  const { m, n } = parseMxNKey(key);
+  return [
+    // clockwise from top left
+    `${m - 1}#${n - 1}`,
+    `${m - 1}#${n}`,
+    `${m - 1}#${n + 1}`,
+    `${m}#${n - 1}`,
+    `${m}#${n + 1}`,
+    `${m + 1}#${n - 1}`,
+    `${m + 1}#${n}`,
+    `${m + 1}#${n + 1}`,
+  ];
+};
 
 /**
  * 'age' an m x n matrix of cells by one period, according to the rules of Conway's Game of Life
- * time: O(m * n)
- * space: O(m * n)
- * @param {boolean[][]} cellValues - m x n matrix of cells
- * @returns {boolean[][]} the cellValues incremented according to the rules of Conway's Game of Life
+ * @param {{string: bool}} cellValues - the 'live' cells of an m x n matrix
+ * @returns {{string: bool}} the cellValues incremented according to the rules of Conway's Game of Life
  */
-export const incrementCells = (cellValues) =>
-  cellValues.map((row, m) =>
-    row.map((cell, n) => {
-      const liveNeighbors = getLiveNeighbors(
-        getCellNeighborCoordinates(m, n),
-        cellValues
-      );
-      if (cell === true) {
-        if (liveNeighbors === 2 || liveNeighbors === 3) return true;
-        else return false;
-      } else {
-        if (liveNeighbors === 3) return true;
-        else return false;
-      }
-    })
-  );
+export const incrementCells = (cellValues) => {
+  const neighbors = Object.keys(cellValues).reduce((acc, key) => {
+    const neighborCellsToKey = getCellNeighborCoordinates(key); // get 8 surrounding neighbors
+    neighborCellsToKey.forEach((coords) => {
+      acc[coords] = acc[coords] ? acc[coords] + 1 : 1;
+    });
+    return acc;
+  }, {});
+
+  const newCellValues = Object.entries(neighbors).reduce((acc, cv) => {
+    const coords = cv[0];
+    const numLiveNeighbors = cv[1];
+    const cellIsLive = cellValues[coords];
+    if (cellIsLive) {
+      if (numLiveNeighbors === 2 || numLiveNeighbors === 3) acc[coords] = true;
+    } else {
+      if (numLiveNeighbors === 3) acc[coords] = true;
+    }
+    return acc;
+  }, {});
+
+  return newCellValues;
+};
 
 /**
  * takes in a semantic blueprint slug and a blank grid and returns a grid set in accordance with the blueprint
  * @param {{number: number[]}} blueprint - a blueprint slug. of the form { row: [each, column, occupied, in, row]}
- * @param {number[][]} grid - an m x n matrix
+ * @param {number[][]} grid - the 'live' cells of m x n grid
  * @returns
  */
 export const setInitialCondition = (blueprint, grid) => {
-  const blueprintMapping = Object.entries(blueprint)
-    .map((entry) => {
-      const row = Number.parseInt(entry[0]);
-      const cols = entry[1];
-      return [...cols.map((col) => [row, col])];
-    })
-    .flat();
-  const gridCopy = grid.map((row) => row.slice()).slice();
-  blueprintMapping.forEach((coord) => {
-    gridCopy[coord[0]][coord[1]] = true;
+  const hashMap = {};
+  Object.entries(blueprint).forEach((entry) => {
+    const row = Number.parseInt(entry[0]);
+    const cols = entry[1];
+    cols.forEach((col) => {
+      const key = `${row}#${col}`;
+      hashMap[key] = true;
+    });
   });
-  return gridCopy;
+  return hashMap;
 };
 
 /**
@@ -90,74 +92,4 @@ export const transformBlueprint = (rowOffset, columnOffset, blueprint) => {
     );
   });
   return newBlueprint;
-};
-
-/**
- * checks the top row of a matrix to see if has at least one 'live' cell
- * @param {boolean[][]} cellValues - an m x n matrix of cells
- * @returns {boolean} whether the top row of the matrix contains a 'live' cell
- */
-export const checkTopRow = (cellValues) => {
-  const topRow = cellValues[0];
-  for (let cell of topRow) {
-    if (cell === true) return true;
-  }
-  return false;
-};
-
-export const checkLeftColumn = (cellValues) => {
-  for (let i = 0; i < cellValues.length; i++) {
-    if (cellValues[i][0] === true) return true;
-  }
-  return false;
-};
-
-export const checkRightColumn = (cellValues) => {
-  const numColumns = cellValues[0].length;
-  const numRows = cellValues.length;
-  for (let i = 0; i < numRows; i++) {
-    if (cellValues[i][numColumns - 1] === true) return true;
-  }
-  return false;
-};
-
-export const checkBottomRow = (cellValues) => {
-  const bottomRow = cellValues[cellValues.length - 1];
-  for (let i = 0; i < bottomRow.length; i++) {
-    if (bottomRow[i] === true) return true;
-  }
-  return false;
-};
-
-/**
- * checks the borders of the passed m x n matrix, if there are live cells on any of the edges, it adds a row or column to that edge.
- * @param {boolean[][]} cellValues - an m x n matrix of cells
- * @param {{m: nunber, n: number}} - the m (rows), n (cols) display offset
- * @returns {displayOffsets: boolean[][]} the modified m x n matrix
- */
-export const checkEdgesAndAddExtraRowsOrColumns = (
-  cellValues,
-  displayOffset
-) => {
-  // check edges, add if necessary
-  const newTop = checkTopRow(cellValues);
-  const newLeft = checkLeftColumn(cellValues);
-  const newRight = checkRightColumn(cellValues);
-  const newBottom = checkBottomRow(cellValues);
-
-  const blankRow = Array(cellValues[0].length).fill(false);
-  if (newTop) cellValues.unshift(blankRow);
-  if (newLeft) {
-    cellValues.forEach((row) => row.unshift(false));
-  }
-  if (newRight) {
-    cellValues.forEach((row) => row.push(false));
-  }
-  if (newBottom) cellValues.push(blankRow);
-
-  // adjust offset
-  if (newTop) displayOffset.m = displayOffset.m + 1;
-  if (newLeft) displayOffset.n = displayOffset.n + 1;
-
-  return { cellValues, displayOffset };
 };
